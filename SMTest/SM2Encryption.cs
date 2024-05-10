@@ -27,7 +27,7 @@ public class SM2Encryption
     /// </summary>  
     /// <param name="privateKey">输出的私钥（Base64编码）</param>  
     /// <param name="publicKey">输出的公钥（Base64编码）</param>  
-    public static void GenerateSM2KeyPair(out string privateKey, out string publicKey)
+    public static void GenerateSM2KeyPair(out string privateKey, out string publicKey,bool isHex=false)
     {
         try
         {
@@ -43,14 +43,24 @@ public class SM2Encryption
 
             // 获取私钥参数  
             ECPrivateKeyParameters privateKeyParams = (ECPrivateKeyParameters)keyPair.Private;
-            // 私钥：将私钥值转换为无符号字节数组并编码为Base64字符串  
-            privateKey = Base64.ToBase64String(privateKeyParams.D.ToByteArrayUnsigned());
-
             // 获取公钥参数  
             ECPublicKeyParameters publicKeyParams = (ECPublicKeyParameters)keyPair.Public;
-            // 公钥：将公钥点编码为压缩格式（如果需要）并编码为Base64字符串  
-            // 注意：SM2公钥通常使用未压缩格式，这里使用未压缩格式  
-            publicKey = Base64.ToBase64String(publicKeyParams.Q.GetEncoded(false)); // false 表示未压缩格式  
+            if (!isHex)
+            {
+                // 私钥：将私钥值转换为无符号字节数组并编码为Base64字符串  
+                privateKey = Base64.ToBase64String(privateKeyParams.D.ToByteArrayUnsigned());
+                // 公钥：将公钥点编码为压缩格式（如果需要）并编码为Base64字符串  
+                // 注意：SM2公钥通常使用未压缩格式，这里使用未压缩格式  
+                publicKey = Base64.ToBase64String(publicKeyParams.Q.GetEncoded(false)); // false 表示未压缩格式  
+            }
+            else
+            {
+                // 私钥：将私钥值转换为无符号字节数组并编码为Hex字符串  
+                privateKey = Hex.ToHexString(privateKeyParams.D.ToByteArrayUnsigned());
+                // 公钥：将公钥点编码为压缩格式（如果需要）并编码为Hex字符串  
+                // 注意：SM2公钥通常使用未压缩格式，这里使用未压缩格式  
+                publicKey = Hex.ToHexString(publicKeyParams.Q.GetEncoded(false)); // false 表示未压缩格式  
+            }
         }
         catch (Exception ex)
         {
@@ -65,28 +75,11 @@ public class SM2Encryption
     /// <param name="message">待加密的消息</param>  
     /// <param name="publicKey">SM2公钥（Base64编码）</param>  
     /// <returns>加密后的密文（Base64编码）</returns>  
-    public static string Encrypt(string message, string publicKey)
+    public static string EncryptBase64(string message, string publicKey)
     {
         try
         {
-            // 解码公钥  
-            byte[] keyBytes = Base64.Decode(publicKey);
-
-            ECPoint q = CurveParams.Curve.DecodePoint(keyBytes);
-            //创建公钥参数
-            ECDomainParameters domainParams = new ECDomainParameters(CurveParams);
-            ECPublicKeyParameters pubKeyParams = new ECPublicKeyParameters("EC", q, domainParams);
-
-            // 创建SM2加密引擎并初始化  
-            SM2Engine sm2Engine = new SM2Engine();
-            sm2Engine.Init(true, new ParametersWithRandom(pubKeyParams,secureRandom));
-
-            // 将原始数据转换为字节数组  
-            byte[] dataBytes = Encoding.UTF8.GetBytes(message);
-
-            // 执行加密操作  
-            // 注意：SM2加密通常用于加密固定长度的数据块（例如ECCiphertext），这里我们假设消息长度适合直接加密  
-            byte[] encryptedData = sm2Engine.ProcessBlock(dataBytes, 0, dataBytes.Length);
+            byte[] encryptedData =Encrypt(Encoding.UTF8.GetBytes(message), Base64.Decode(publicKey)) ;
 
             // 将加密结果转换为Base64字符串  
             return Base64.ToBase64String(encryptedData);
@@ -97,20 +90,118 @@ public class SM2Encryption
             throw new Exception("Error encrypting message with SM2 public key.", ex);
         }
     }
+    /// <summary>  
+    /// SM2 公钥加密  
+    /// </summary>  
+    /// <param name="message">待加密的消息</param>  
+    /// <param name="publicKey">SM2公钥（Hex编码）</param>  
+    /// <returns>加密后的密文（Hex编码）</returns>  
+    public static string EncryptHex(string message, string publicKey)
+    {
+        try
+        {
+            byte[] encryptedData = Encrypt(Encoding.UTF8.GetBytes(message), Hex.Decode(publicKey));
 
+            // 将加密结果转换为Base64字符串  
+            return Hex.ToHexString(encryptedData);
+        }
+        catch (Exception ex)
+        {
+            // 处理异常，例如公钥解码失败或加密操作出错  
+            throw new Exception("Error encrypting message with SM2 public key.", ex);
+        }
+    }
+    /// <summary>  
+    /// SM2 公钥加密  
+    /// </summary>  
+    /// <param name="message">待加密的消息</param>  
+    /// <param name="publicKey">SM2公钥（Base64编码）</param>  
+    /// <returns>加密后的密文（Base64编码）</returns>  
+    public static byte[] Encrypt(byte[] dataBytes, byte[] publicKey)
+    {
+        try
+        {
+
+
+            ECPoint q = CurveParams.Curve.DecodePoint(publicKey);
+            //创建公钥参数
+            ECDomainParameters domainParams = new ECDomainParameters(CurveParams);
+            ECPublicKeyParameters pubKeyParams = new ECPublicKeyParameters("EC", q, domainParams);
+
+            // 创建SM2加密引擎并初始化  
+            SM2Engine sm2Engine = new SM2Engine();
+            sm2Engine.Init(true, new ParametersWithRandom(pubKeyParams, secureRandom));
+
+
+            // 执行加密操作  
+            // 注意：SM2加密通常用于加密固定长度的数据块（例如ECCiphertext），这里我们假设消息长度适合直接加密  
+            byte[] encryptedData = sm2Engine.ProcessBlock(dataBytes, 0, dataBytes.Length);
+
+            return encryptedData;
+        }
+        catch (Exception ex)
+        {
+            // 处理异常，例如公钥解码失败或加密操作出错  
+            throw new Exception("Error encrypting message with SM2 public key.", ex);
+        }
+    }
     /// <summary>  
     /// 使用SM2私钥解密消息  
     /// </summary>  
     /// <param name="ciphertext">待解密的密文（Base64编码）</param>  
     /// <param name="privateKey">SM2私钥（Base64编码）</param>  
     /// <returns>解密后的明文</returns>  
-    public static string Decrypt(string ciphertext, string privateKey)
+    public static string DecryptBase64(string ciphertext, string privateKey)
+    {
+        try
+        {
+            // 执行解密操作  
+            byte[] decryptedData = Decrypt(Base64.Decode(ciphertext),Base64.Decode(privateKey));
+
+            // 将解密结果转换为字符串  
+            return Encoding.UTF8.GetString(decryptedData);
+        }
+        catch (Exception ex)
+        {
+            // 处理异常，例如私钥解码失败、密文解码失败或解密操作出错  
+            throw new Exception("Error decrypting ciphertext with SM2 private key.", ex);
+        }
+    }
+    /// <summary>  
+    /// 使用SM2私钥解密消息  
+    /// </summary>  
+    /// <param name="ciphertext">待解密的密文（Hex编码）</param>  
+    /// <param name="privateKey">SM2私钥（Hex编码）</param>  
+    /// <returns>解密后的明文</returns>  
+    public static string DecryptHex(string ciphertext, string privateKey)
+    {
+        try
+        {
+            // 执行解密操作  
+            byte[] decryptedData = Decrypt(Hex.Decode(ciphertext), Hex.Decode(privateKey));
+
+            // 将解密结果转换为字符串  
+            return Encoding.UTF8.GetString(decryptedData);
+        }
+        catch (Exception ex)
+        {
+            // 处理异常，例如私钥解码失败、密文解码失败或解密操作出错  
+            throw new Exception("Error decrypting ciphertext with SM2 private key.", ex);
+        }
+    }
+    /// <summary>  
+    /// 使用SM2私钥解密消息  
+    /// </summary>  
+    /// <param name="encryptedData">待解密的密文（字节数组形式）</param>  
+    /// <param name="privateKey">SM2私钥（字节数组形式）</param>  
+    /// <returns>解密后的明文（字节数组形式）</returns>  
+    public static byte[] Decrypt(byte[] encryptedData, byte[] privateKey)
     {
         try
         {
             // 解码私钥  
-            byte[] keyBytes = Base64.Decode(privateKey);
-            BigInteger d = new BigInteger(1, keyBytes);
+            //byte[] keyBytes = Base64.Decode(privateKey);
+            BigInteger d = new BigInteger(1, privateKey);
 
             // 获取SM2曲线参数  
             ECDomainParameters domainParams = new ECDomainParameters(CurveParams);
@@ -122,14 +213,14 @@ public class SM2Encryption
             SM2Engine sm2Engine = new SM2Engine();
             sm2Engine.Init(false, privateKeyParams);
 
-            // 解码密文  
-            byte[] encryptedData = Base64.Decode(ciphertext);
+            //// 解码密文  
+            //byte[] encryptedData = Base64.Decode(ciphertext);
 
             // 执行解密操作  
             byte[] decryptedData = sm2Engine.ProcessBlock(encryptedData, 0, encryptedData.Length);
 
             // 将解密结果转换为字符串  
-            return Encoding.UTF8.GetString(decryptedData);
+            return decryptedData;
         }
         catch (Exception ex)
         {
