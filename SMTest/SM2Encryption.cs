@@ -23,11 +23,11 @@ public class SM2Encryption
     /// </summary>
     private static readonly SecureRandom secureRandom = new SecureRandom();
     /// <summary>  
-    /// 生成SM2密钥对，密钥对使用Base64进行编码  
+    /// 生成SM2密钥对，密钥对使用Base64编码或Hex进行编码  
     /// </summary>  
-    /// <param name="privateKey">输出的私钥（Base64编码）</param>  
-    /// <param name="publicKey">输出的公钥（Base64编码）</param>  
-    public static void GenerateSM2KeyPair(out string privateKey, out string publicKey,bool isHex=false)
+    /// <param name="privateKey">输出的私钥（Base64编码或Hex）</param>  
+    /// <param name="publicKey">输出的公钥（Base64编码或Hex）</param>  
+    public static void GenerateSM2KeyPair(out string privateKey, out string publicKey, bool isHex = false)
     {
         try
         {
@@ -79,7 +79,7 @@ public class SM2Encryption
     {
         try
         {
-            byte[] encryptedData =Encrypt(Encoding.UTF8.GetBytes(message), Base64.Decode(publicKey)) ;
+            byte[] encryptedData = Encrypt(Encoding.UTF8.GetBytes(message), Base64.Decode(publicKey));
 
             // 将加密结果转换为Base64字符串  
             return Base64.ToBase64String(encryptedData);
@@ -114,15 +114,13 @@ public class SM2Encryption
     /// <summary>  
     /// SM2 公钥加密  
     /// </summary>  
-    /// <param name="message">待加密的消息</param>  
-    /// <param name="publicKey">SM2公钥（Base64编码）</param>  
-    /// <returns>加密后的密文（Base64编码）</returns>  
+    /// <param name="message">待加密的消息（字节数组形式）</param>  
+    /// <param name="publicKey">SM2公钥（字节数组形式）</param>  
+    /// <returns>加密后的密文（字节数组形式）</returns>  
     public static byte[] Encrypt(byte[] dataBytes, byte[] publicKey)
     {
         try
         {
-
-
             ECPoint q = CurveParams.Curve.DecodePoint(publicKey);
             //创建公钥参数
             ECDomainParameters domainParams = new ECDomainParameters(CurveParams);
@@ -156,7 +154,7 @@ public class SM2Encryption
         try
         {
             // 执行解密操作  
-            byte[] decryptedData = Decrypt(Base64.Decode(ciphertext),Base64.Decode(privateKey));
+            byte[] decryptedData = Decrypt(Base64.Decode(ciphertext), Base64.Decode(privateKey));
 
             // 将解密结果转换为字符串  
             return Encoding.UTF8.GetString(decryptedData);
@@ -200,7 +198,6 @@ public class SM2Encryption
         try
         {
             // 解码私钥  
-            //byte[] keyBytes = Base64.Decode(privateKey);
             BigInteger d = new BigInteger(1, privateKey);
 
             // 获取SM2曲线参数  
@@ -212,9 +209,6 @@ public class SM2Encryption
             // 创建SM2解密引擎并初始化  
             SM2Engine sm2Engine = new SM2Engine();
             sm2Engine.Init(false, privateKeyParams);
-
-            //// 解码密文  
-            //byte[] encryptedData = Base64.Decode(ciphertext);
 
             // 执行解密操作  
             byte[] decryptedData = sm2Engine.ProcessBlock(encryptedData, 0, encryptedData.Length);
@@ -229,6 +223,3 @@ public class SM2Encryption
         }
     }
 }
-
-
-

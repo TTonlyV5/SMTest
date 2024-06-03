@@ -48,7 +48,7 @@ public static class SM4Encryption
     public static string DecryptBase64(string encryptMsg, string key, string iv, string mode = "ECB")
     {
         // 解密后的明文  
-        byte[] decryptedData = Decrypt(Convert.FromBase64String(encryptMsg), Encoding.UTF8.GetBytes( key), Encoding.UTF8.GetBytes(iv),mode);
+        byte[] decryptedData = Decrypt(Convert.FromBase64String(encryptMsg), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(iv), mode);
         // 转换解密后的字节数组为字符串  
         string decryptedMsg = Encoding.UTF8.GetString(decryptedData);
         return decryptedMsg.TrimEnd('\0');
@@ -67,7 +67,7 @@ public static class SM4Encryption
     /// <exception cref="ArgumentNullException">当msg或key为空时抛出。</exception>  
     /// <exception cref="ArgumentException">当mode不被支持时抛出。</exception>  
     /// <exception cref="CryptographicException">当加密过程中发生错误时抛出。</exception>  
-    public static string EncryptHex(string msg,string key, string iv, string mode = "ECB")
+    public static string EncryptHex(string msg, string key, string iv, string mode = "ECB")
     {
         try
         {
@@ -99,9 +99,9 @@ public static class SM4Encryption
     {
         try
         {
-           byte[] decryptedData= Decrypt(Convert.FromHexString(encryptMsg), Hex.Decode(key), Hex.Decode(iv), mode);
+            byte[] decryptedData = Decrypt(Convert.FromHexString(encryptMsg), Hex.Decode(key), Hex.Decode(iv), mode);
             // 转换解密后的字节数组为字符串  
-            string decryptedMsg =Encoding.UTF8.GetString(decryptedData);
+            string decryptedMsg = Encoding.UTF8.GetString(decryptedData);
             return decryptedMsg.TrimEnd('\0');
         }
         catch (Exception ex)
@@ -189,7 +189,7 @@ public static class SM4Encryption
     public static byte[] Decrypt(byte[] cipherTextData, byte[] key, byte[] iv, string mode = "ECB")
     {
         // 验证输入参数  
-        if (cipherTextData==null||cipherTextData.Length==0)
+        if (cipherTextData == null || cipherTextData.Length == 0)
             throw new ArgumentNullException(nameof(cipherTextData), "cipherTextData cannot be null or empty.");
         if (key == null || key.Length == 0)
             throw new ArgumentNullException(nameof(key), "Key cannot be null or empty.");
