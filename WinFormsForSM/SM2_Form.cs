@@ -38,7 +38,7 @@ namespace WinFormsForSM
             try
             {
 
-                var output=SM2Encryption.Encrypt(input,pubkey);
+                var output=SM2Encryption.EncryptBase64(input,pubkey);
 
                 txtEncodeOutput.Text = output;
                 txtDecodeInput.Text = output;
@@ -69,7 +69,7 @@ namespace WinFormsForSM
 
             try
             {
-                var output = SM2Encryption.Decrypt(input,prikey);
+                var output = SM2Encryption.DecryptBase64(input,prikey);
                 txtDecodeOutput.Text = output;
             }
             catch (Exception ex)

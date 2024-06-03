@@ -19,8 +19,8 @@ namespace WinFormsForSM
 
                 string iv = txtIV.Text.Trim();
                 var output = radECB.Checked
-                    ? SM4Encryption.Encrypt(input, key, iv, "ECB")
-                    : SM4Encryption.Encrypt(input, key, iv, "CBC");
+                    ? SM4Encryption.EncryptBase64(input, key, iv, "ECB")
+                    : SM4Encryption.EncryptBase64(input, key, iv, "CBC");
 
 
                 txtEncodeOutput.Text = output;
@@ -41,8 +41,8 @@ namespace WinFormsForSM
 
                 string iv = txtIV.Text.Trim();
                 var output = radECB.Checked
-                    ? SM4Encryption.Decrypt(input, key, iv, "ECB")
-                    : SM4Encryption.Decrypt(input, key, iv, "CBC");
+                    ? SM4Encryption.DecryptBase64(input, key, iv, "ECB")
+                    : SM4Encryption.DecryptBase64(input, key, iv, "CBC");
                 txtplainText.Text = output;
             }
             catch (Exception ex)
