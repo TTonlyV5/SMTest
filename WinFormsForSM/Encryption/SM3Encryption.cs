@@ -4,8 +4,6 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Utilities.Encoders;
 using System.Text;
 
-namespace ZhonTai.Common.Helpers;
-
 /// <summary>
 /// 提供基于SM3算法的哈希计算和HMAC功能。
 /// </summary>

@@ -5,8 +5,10 @@ using Org.BouncyCastle.Crypto.Paddings;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities.Encoders;
+using System;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Unicode;
 
 /// <summary>  
 /// 加密工具类，提供基于SM4算法的加密和解密功能。  
@@ -112,7 +114,7 @@ public static class SM4Encryption
     /// <summary>  
     /// 使用SM4算法对指定明文进行加密。  
     /// </summary>  
-    /// <param name="msg">待加密的明文（字节数组形式）。</param>  
+    /// <param name="plainTextData">待加密的明文（字节数组形式）。</param>  
     /// <param name="key">用于加密的密钥（字节数组形式）。</param>  
     /// <param name="iv">初始化向量（字节数组形式），对于ECB模式可以传递null。</param>  
     /// <param name="mode">加密模式，默认为"ECB"。</param>  
@@ -176,7 +178,7 @@ public static class SM4Encryption
     /// <summary>  
     /// 使用SM4算法对指定密文进行解密。  
     /// </summary>  
-    /// <param name="encryptMsg">待解密的密文（字节数组形式）。</param>  
+    /// <param name="cipherTextData">待解密的密文（字节数组形式）。</param>  
     /// <param name="key">用于解密的密钥（字节数组形式）。</param>  
     /// <param name="iv">初始化向量（字节数组形式），对于ECB模式可以传递null。</param>  
     /// <param name="mode">加密模式，用于确定解密时使用的模式，默认为"ECB"。</param>  
