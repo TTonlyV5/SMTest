@@ -33,7 +33,7 @@ public class Program
         string sm3Hash = SM3Encryption.ComputeSM3HashBase64(data);
         string sm3HashHex = SM3Encryption.ComputeSM3HashHex(data);
         //sm3 with key
-        byte[] hash = SM3Encryption.ComputeHMacSM3(data, sm3key);
+        byte[] hash = SM3Encryption.ComputeHMACSM3(data, sm3key);
         string stringHash = Base64.ToBase64String(hash);
         string a = SM3Encryption.ComputeSM3HashBase64(data);
         string hexHash = Hex.ToHexString(hash); // 如果需要十六进制字符串表示  

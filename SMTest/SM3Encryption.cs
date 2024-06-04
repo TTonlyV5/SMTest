@@ -49,7 +49,7 @@ public static class SM3Encryption
     /// <param name="data">要计算HMAC的数据（字符串形式）。</param>
     /// <param name="key">HMAC密钥（字符串形式）。</param>
     /// <returns>HMAC-SM3值的二进制数组。</returns>
-    public static byte[] ComputeHMacSM3(string data, string key)
+    public static byte[] ComputeHMACSM3(string data, string key)
     {
         var msg = Encoding.UTF8.GetBytes(data);
         var keyBytes = Encoding.UTF8.GetBytes(key);
@@ -72,9 +72,9 @@ public static class SM3Encryption
     /// <returns>HMAC-SM3值的十六进制字符串。</returns>
     public static string ComputeHMACSM3Hex(string data, string key)
     {
-        return Hex.ToHexString(ComputeHMacSM3(data, key));
+        return Hex.ToHexString(ComputeHMACSM3(data, key));
     }
-    /// <summary>
+  /// <summary>
     /// 计算给定数据和密钥的HMAC-SM3值（Base64表示）。
     /// </summary>
     /// <param name="data">要计算HMAC的数据（字符串形式）。</param>
@@ -82,6 +82,6 @@ public static class SM3Encryption
     /// <returns>HMAC-SM3值的Base64字符串。</returns>
     public static string ComputeHMACSM3Base64(string data, string key)
     {
-        return Base64.ToBase64String(ComputeHMacSM3(data, key));
+        return Base64.ToBase64String(ComputeHMACSM3(data, key));
     }
 }
