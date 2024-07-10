@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMTest", "SMTest\SMTest.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsForSM", "WinFormsForSM\WinFormsForSM.csproj", "{DA97ED1C-DA29-4F84-8C7A-031AD4100E90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMLib", "SMLib\SMLib.csproj", "{4CAB3BE0-16E0-4931-9928-B4479B1B111E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{DA97ED1C-DA29-4F84-8C7A-031AD4100E90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA97ED1C-DA29-4F84-8C7A-031AD4100E90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA97ED1C-DA29-4F84-8C7A-031AD4100E90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CAB3BE0-16E0-4931-9928-B4479B1B111E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CAB3BE0-16E0-4931-9928-B4479B1B111E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CAB3BE0-16E0-4931-9928-B4479B1B111E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CAB3BE0-16E0-4931-9928-B4479B1B111E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

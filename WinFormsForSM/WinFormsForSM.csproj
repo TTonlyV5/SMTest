@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.3.1" />
+    <ProjectReference Include="..\SMLib\SMLib.csproj" />
   </ItemGroup>
 
 </Project>

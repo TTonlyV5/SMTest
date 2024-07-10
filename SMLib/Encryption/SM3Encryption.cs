@@ -74,7 +74,7 @@ public static class SM3Encryption
     {
         return Hex.ToHexString(ComputeHMACSM3(data, key));
     }
-  /// <summary>
+    /// <summary>
     /// 计算给定数据和密钥的HMAC-SM3值（Base64表示）。
     /// </summary>
     /// <param name="data">要计算HMAC的数据（字符串形式）。</param>
